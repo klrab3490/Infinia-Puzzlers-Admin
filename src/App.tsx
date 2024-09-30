@@ -11,8 +11,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Firebase Imports
@@ -22,18 +20,8 @@ import { auth, db } from "@/config/firebaseConfig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, addDoc, getDocs, serverTimestamp, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 
-interface Task {
-    id: string;
-    taskName: string;
-    description: string;
-    isCompleted: boolean;
-    accepted: boolean;
-    grade: number;
-    photoURL: string | null;
-}
-
 interface AddTask {
-    id: Key | null | undefined;
+    id: string | null;
     taskName: string;
     description: string;
 }
@@ -45,11 +33,6 @@ function App() {
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [newTask, setNewTask] = useState<AddTask>({
-        id: null,
-        taskName: "",
-        description: "",
-    });
     const [isAddingTask, setIsAddingTask] = useState(false);
 
 
@@ -328,7 +311,7 @@ function App() {
                                             <TableCell>{task.taskName}</TableCell>
                                             <TableCell>{task.description}</TableCell>
                                             <TableCell>
-                                                <Button onClick={() => handleDeleteTask(task.id)}>Delete</Button>
+                                                <Button onClick={() => task.id && handleDeleteTask(task.id)}>Delete</Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}
