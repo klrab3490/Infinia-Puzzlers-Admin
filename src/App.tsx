@@ -35,7 +35,6 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     const [isAddingTask, setIsAddingTask] = useState(false);
 
-
     // Fetch tasks if admin
     const fetchTasks = async () => {
         try {
@@ -45,7 +44,8 @@ function App() {
             tasksSnapshot.forEach((doc) => {
                 tasksList.push({ id: doc.id, ...doc.data() } as unknown as AddTask);
             });
-            setTasks(tasksList);
+            const tasks_List = tasksList.reverse();
+            setTasks(tasks_List);
         } catch (error) {
             console.error("Error fetching tasks:", error);
             setError("Failed to fetch tasks.");
@@ -195,8 +195,8 @@ function App() {
     return (
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             {userID && <Navbar onSignOut={handleSignOut} />}
-            <div className="p-6 flex flex-col justify-center items-center min-h-screen w-full bg-gray-900 text-white">
-            {!user ? (
+            <div className={`p-6 flex flex-col justify-center items-center h-full w-full text-white ${userID ? "min-h-[calc(100vh-100px)]" : "min-h-screen" }`}>
+                {!user ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <Card className="w-[350px]">
                             <CardHeader className="space-x-1">
@@ -204,10 +204,10 @@ function App() {
                                 <CardDescription>Enter your email to sign in or create an account</CardDescription>
                             </CardHeader>
                             <Tabs defaultValue="login" className="w-full">
-                                <div className="px-6 pb-6">
-                                    <TabsList className="grid w-full grid-cols-2">
+                                <div className="pb-6 px-6">
+                                    <TabsList className="grid w-full grid-cols-1">
                                         <TabsTrigger value="login">Login</TabsTrigger>
-                                        <TabsTrigger value="register">Register</TabsTrigger>
+                                        {/* <TabsTrigger value="register">Register</TabsTrigger> */}
                                     </TabsList>
                                 </div>
 
@@ -266,15 +266,12 @@ function App() {
                 ) : (
                     <div>
                         <h2>User ID: {userID}</h2>
-                        <div className="p-3">
-                            <div className="grid grid-cols-3">
+                        <div className="py-3">
+                            <div className="flex w-full justify-between items-center">
                                 <div>Tasks</div>
-                                <div></div>
-                                <div>
-                                    <Button onClick={() => setIsAddingTask(!isAddingTask)}>
-                                        {isAddingTask ? "Close" : "Add Task"}
-                                    </Button>
-                                </div>
+                                <Button onClick={() => setIsAddingTask(!isAddingTask)}>
+                                    {isAddingTask ? "Close" : "Add Task"}
+                                </Button>
                             </div>
                         </div>
                         {isAddingTask && (
